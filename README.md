@@ -28,7 +28,7 @@
 
 ## 1. 下载与运行
 
-从 [Releases](https://github.com/fylm-233/SplashFontReplacer-多合一启动图字体UI替换器/releases/latest) 下载：
+从 [Releases](https://github.com/fylm-233/SplashFontReplacer--UI-/releases/latest) 下载：
 
 | 文件 | 说明 |
 | --- | --- |
