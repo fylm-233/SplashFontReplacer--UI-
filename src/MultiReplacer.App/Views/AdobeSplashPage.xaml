@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="MultiReplacer.App.Views.AdobeSplashPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:MultiReplacer.App.Models"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="mc">
+
+    <Grid Padding="20,12,20,12" RowSpacing="10" AllowDrop="True"
+          DragOver="OnDragOver" Drop="OnDrop">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 软件列表 + 目标路径 -->
+        <Border Grid.Row="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                CornerRadius="8" Padding="14,10,14,10">
+            <Grid RowSpacing="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="软件" VerticalAlignment="Center"
+                               Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <ComboBox Grid.Column="1" x:Name="CboApp" HorizontalAlignment="Stretch"
+                              DisplayMemberPath="Display" SelectionChanged="OnAppChanged"
+                              PlaceholderText="正在检测已安装的软件…" />
+                    <Button Grid.Column="2" x:Name="BtnRefresh" Content="重新检测" Click="OnRefreshApps" />
+                    <Button Grid.Column="3" x:Name="BtnPickFolder" Content="浏览目录…" Click="OnPickFolder" />
+                </Grid>
+
+                <Grid Grid.Row="1" ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="目标" VerticalAlignment="Center"
+                               Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBox Grid.Column="1" x:Name="TxtTarget"
+                             PlaceholderText="安装目录或主程序 exe / 快捷方式，也可直接把 exe 拖进窗口" />
+                    <Button Grid.Column="2" x:Name="BtnBrowse" Content="浏览 exe…" Click="OnBrowse" />
+                    <Button Grid.Column="3" x:Name="BtnScan" Content="扫描" Style="{StaticResource AccentButtonStyle}"
+                            Click="OnScan" />
+                </Grid>
+            </Grid>
+        </Border>
+
+        <InfoBar Grid.Row="1" x:Name="HeaderInfo" IsOpen="False" IsClosable="False"
+                 Severity="Informational" Title="尚未扫描" Message="" />
+
+        <Grid Grid.Row="2" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="320" />
+                <ColumnDefinition Width="340" />
+            </Grid.ColumnDefinitions>
+
+            <!-- 候选列表 -->
+            <Border Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    CornerRadius="8" Padding="12,10,12,10">
+                <Grid RowSpacing="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="TxtFilter" PlaceholderText="按名称 / 所在文件筛选"
+                                 TextChanged="OnFilterTextChanged" />
+                        <ToggleSwitch Grid.Column="1" x:Name="ChkShowAll" OnContent="显示全部"
+                                      OffContent="显示全部" IsOn="False" MinWidth="0"
+                                      Toggled="OnShowAllToggled" />
+                    </Grid>
+
+                    <TextBlock Grid.Row="1" x:Name="ListHint"
+                               Text="候选按可能性排序；同一张图的多分辨率变体会自动一起替换"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               TextWrapping="Wrap"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                    <ListView Grid.Row="2" x:Name="LvCandidates" SelectionMode="Single"
+                              SelectionChanged="OnCandidateChanged">
+                        <ListView.Header>
+                            <Grid Padding="12,0,12,4" ColumnSpacing="8" Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="118" />
+                                    <ColumnDefinition Width="94" />
+                                    <ColumnDefinition Width="62" />
+                                    <ColumnDefinition Width="56" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="名称" Style="{StaticResource CaptionTextBlockStyle}" />
+                                <TextBlock Grid.Column="1" Text="位置" Style="{StaticResource CaptionTextBlockStyle}" />
+                                <TextBlock Grid.Column="2" Text="尺寸" Style="{StaticResource CaptionTextBlockStyle}" />
+                                <TextBlock Grid.Column="3" Text="字节" Style="{StaticResource CaptionTextBlockStyle}" />
+                                <TextBlock Grid.Column="4" Text="判定" Style="{StaticResource CaptionTextBlockStyle}" />
+                            </Grid>
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:SplashRow">
+                                <Grid ColumnSpacing="8" Padding="0,2,0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="118" />
+                                        <ColumnDefinition Width="94" />
+                                        <ColumnDefinition Width="62" />
+                                        <ColumnDefinition Width="56" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{x:Bind Name}" TextTrimming="CharacterEllipsis"
+                                               ToolTipService.ToolTip="{x:Bind Name}" />
+                                    <TextBlock Grid.Column="1" Text="{x:Bind Host}" TextTrimming="CharacterEllipsis"
+                                               ToolTipService.ToolTip="{x:Bind Host}"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    <TextBlock Grid.Column="2" Text="{x:Bind Dimensions}" />
+                                    <TextBlock Grid.Column="3" Text="{x:Bind Bytes}" />
+                                    <TextBlock Grid.Column="4" Text="{x:Bind Judgement}"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Border>
+
+            <!-- 预览与替换图 -->
+            <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    CornerRadius="8" Padding="12,10,12,10">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="原启动图" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        <Border Height="120" CornerRadius="6" Background="{ThemeResource LayerFillColorAltBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                            <Image x:Name="ImgOriginal" Stretch="Uniform" Margin="4" />
+                        </Border>
+                        <TextBlock x:Name="TxtOriginalInfo" Text="未选择资源" TextWrapping="Wrap"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                        <TextBlock Text="新图片" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,4,0,0" />
+                        <Border Height="120" CornerRadius="6" Background="{ThemeResource LayerFillColorAltBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                            <Image x:Name="ImgNew" Stretch="Uniform" Margin="4" />
+                        </Border>
+                        <TextBlock x:Name="TxtNewInfo" Text="尚未选择替换图" TextWrapping="Wrap"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                        <Grid ColumnSpacing="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="BtnChooseImage" Content="选择新的 png…" HorizontalAlignment="Stretch"
+                                    Click="OnChooseImage" />
+                            <Button Grid.Column="1" x:Name="BtnExportOriginal" Content="导出原图"
+                                    Click="OnExportOriginal" />
+                        </Grid>
+
+                        <Grid ColumnSpacing="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="适配方式" VerticalAlignment="Center"
+                                       Style="{StaticResource CaptionTextBlockStyle}" />
+                            <ComboBox Grid.Column="1" x:Name="CboFit" HorizontalAlignment="Stretch"
+                                      SelectedIndex="0" SelectionChanged="OnFitChanged">
+                                <ComboBoxItem Content="等比裁切（推荐，不变形）" />
+                                <ComboBoxItem Content="拉伸到原尺寸" />
+                            </ComboBox>
+                        </Grid>
+
+                        <CheckBox x:Name="ChkVariants" Content="同时替换同组变体（DPI / 高·低分辨率）"
+                                  IsChecked="True" />
+
+                        <TextBlock x:Name="TxtBackup" Text="" TextWrapping="Wrap"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                        <TextBlock Text="日志" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,4,0,0" />
+                        <Border Height="104" CornerRadius="6" Background="{ThemeResource LayerFillColorAltBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                            <ScrollViewer>
+                                <TextBlock x:Name="TxtLog" Text="" FontFamily="Consolas" FontSize="11"
+                                           Padding="8" TextWrapping="Wrap" />
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <!-- 命令栏 -->
+        <Grid Grid.Row="3" ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="BtnApply" Content="应用替换" Style="{StaticResource AccentButtonStyle}"
+                    Click="OnApply" />
+            <Button Grid.Column="1" x:Name="BtnRestore" Content="还原备份" Click="OnRestore" />
+            <Button Grid.Column="2" x:Name="BtnOpenBackup" Content="打开备份目录" Click="OnOpenBackup" />
+            <ProgressRing Grid.Column="3" x:Name="Busy" IsActive="False" Width="20" Height="20"
+                          HorizontalAlignment="Left" Margin="8,0,0,0" />
+            <TextBlock Grid.Column="4" x:Name="TxtSelection" VerticalAlignment="Center"
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+        </Grid>
+    </Grid>
+</Page>

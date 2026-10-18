@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>imgtest</AssemblyName>
+    <RootNamespace>ImgTest</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MultiReplacer.Core\MultiReplacer.Core.csproj" />
+    <!-- 直接编译产品里的渲染代码，而不是维护一份副本：
+         "1:1 是否重采样" "预乘还是直通 alpha" 这些正是要测的点，副本一旦漂移测试就失去意义。 -->
+    <Compile Include="..\..\src\MultiReplacer.App\Services\ImagePrep.cs" Link="ImagePrep.cs" />
+  </ItemGroup>
+</Project>

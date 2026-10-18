@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 使用说明 / Documentation
+    url: https://github.com/fylm-233/SplashFontReplacer-多合一启动图字体UI替换器/blob/main/docs/使用说明.md
+    about: 安装、操作指引、FAQ 与未测试项清单
+  - name: 已放弃适配的软件 / Unsupported software
+    url: https://github.com/fylm-233/SplashFontReplacer-多合一启动图字体UI替换器/blob/main/README.md#4-使用方式
+    about: 例如 CLIP STUDIO PAINT 已确认无可行替换路线，不在支持范围内
+  - name: 讨论 / Discussions
+    url: https://github.com/fylm-233/SplashFontReplacer-多合一启动图字体UI替换器/discussions
+    about: 使用心得、适配请求与泛泛而谈的讨论，请发在这里而不是 Issue

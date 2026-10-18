@@ -1,2 +1,24 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# 统一换行，避免 Windows / macOS / Linux 协作者产生无意义 diff
+* text=auto eol=lf
+
+# 明确按二进制处理的文件（Git 不应尝试合并或转换换行）
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.bmp binary
+*.ico binary
+*.exe binary
+*.dll binary
+*.dat binary
+*.zip binary
+*.log -text
+
+# 构建脚本与批处理保持 Windows 换行
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# 文档、Markdown 与 diff 保持 LF，便于直接阅读
+*.md text eol=lf
+*.diff text eol=lf
+*.patch text eol=lf

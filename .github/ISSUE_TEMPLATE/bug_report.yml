@@ -1,0 +1,99 @@
+name: Bug 报告 / Bug Report
+description: 报告一个问题，请尽量附上复现步骤、系统版本、运行环境与错误日志
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提交前请确认：
+        - 已在 [Issue 列表](../../issues) 中搜索过，没有重复报告；
+        - 目标软件已**完全退出**（不只是关窗口）；
+        - 使用的是 [Releases](../../releases/latest) 页提供的最新版本，或自行构建的最新代码。
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 按顺序写清你做了什么，越具体越好。
+      placeholder: |
+        1. 以管理员身份运行多合一启动图字体UI替换器 v1.0.0（单文件版）
+        2. 在「启动图（Adobe 等）」选择 Adobe Photoshop 2026
+        3. 扫描后选中 PSIconsHighRes.dat · 1532×1032 那一项
+        4. 选择了一张 2000×1300 的 PNG，点「应用替换」
+        5. 弹出错误提示「……」
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: 操作系统版本
+      description: 请写版本号，如 Windows 11 23H2 (build 22631.3447)。
+      placeholder: Windows 11 23H2 (build 22631.3447)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: build
+    attributes:
+      label: 使用的程序版本
+      description: 在「关于与说明」页可查看版本号。
+      options:
+        - Release 单文件版（.exe）
+        - Release 目录版（zip 解压）
+        - 自行构建
+    validations:
+      required: true
+
+  - type: dropdown
+    id: elevated
+    attributes:
+      label: 是否以管理员身份运行
+      options:
+        - 是
+        - 否
+    validations:
+      required: true
+
+  - type: input
+    id: target
+    attributes:
+      label: 目标软件与版本
+      description: 被替换启动图/字体的软件，如 Adobe Photoshop 2026、DaVinci Resolve 19。
+      placeholder: Adobe Photoshop 2026 (26.0)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: 涉及的模块
+      options:
+        - 启动图（Adobe 等）
+        - Adobe 字体
+        - 达芬奇启动图
+        - 达芬奇 UI 字体
+        - 程序启动 / 界面
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 错误日志
+      description: |
+        贴 `%LOCALAPPDATA%\MultiReplacer\logs\` 下对应日期的 `.log` 关键片段。
+        单文件版启动失败时请贴 `bootstrapper.log`。注意**不要**粘贴个人路径以外的敏感信息。
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 补充信息
+      description: 报错截图、`.bak` 备份目录中的清单文件内容、是否首次运行即出现等。
+      render: text
+    validations:
+      required: false

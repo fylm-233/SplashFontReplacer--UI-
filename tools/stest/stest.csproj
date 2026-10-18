@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- 抬到带 WinRT 投影的 TFM，才能直接编译产品里的 ImagePrep（渲染环节正是本次修复点之一）。 -->
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MultiReplacer.Core\MultiReplacer.Core.csproj" />
+    <!-- 直接编译产品代码而不是维护副本：副本一旦漂移，测试就变成自欺欺人。 -->
+    <Compile Include="..\..\src\MultiReplacer.App\Services\ImagePrep.cs" Link="ImagePrep.cs" />
+  </ItemGroup>
+</Project>

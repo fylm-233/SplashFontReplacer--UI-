@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="MultiReplacer.App.Views.AboutPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="mc">
+
+    <ScrollViewer>
+        <StackPanel Padding="20,12,20,20" Spacing="12">
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    CornerRadius="8" Padding="18,16,18,16">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="多合一启动图字体UI替换器"
+                               Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <TextBlock x:Name="TxtVersion"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock TextWrapping="Wrap"
+                               Style="{StaticResource BodyTextBlockStyle}"
+                               Text="把原本分散的替换工具整合到同一个界面：达芬奇启动图（PNG 资源）、多软件启动图（Adobe 全系 + Unreal / Maya / 3ds Max / JetBrains / Visual Studio / Live2D）、达芬奇界面字体（Qt 字体表）、Adobe 语言包字体与字号。各模块独立备份、独立还原，互不影响。" />
+                </StackPanel>
+            </Border>
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    CornerRadius="8" Padding="18,16,18,16">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="四个模块的边界" Style="{StaticResource BodyStrongTextBlockStyle}" />
+
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="1. 达芬奇启动图" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold" />
+                        <TextBlock TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="扫描 Resolve.exe 内嵌的 PNG 资源，用等长重建的 PNG 覆盖指定资源块。只改动 PNG 数据区，PE 结构与文件大小保持不变，因此不需要重新签名。" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="2. 启动图替换（Adobe 全系 + 非 Adobe 软件）" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold" />
+                        <TextBlock TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="先自动列出本机已安装的软件（Adobe 默认扫 C:\Program Files\Adobe，另含 Unreal、Maya、3ds Max、JetBrains 全系、Visual Studio 2022、Live2D），扫不到时可手动指定安装目录。选定后按四种存储形态自动选择写回通道：PE 命名资源（AE/PR/AU/CH/AN/AME/AI/VS，UpdateResource 重建，长度可变）、独立图片文件（Unreal/Maya/3ds Max 的 BMP/PNG，整文件覆盖）、容器内嵌图片（Photoshop 的 PSIcons*Res.dat、InDesign/InCopy 的 .idrc，等长原地覆盖，不动容器索引）、归档条目（JetBrains/Live2D 的 jar，重写条目）。同组 1x/1.5x/2x 变体与高/低分辨率容器会一起替换，并按原尺寸等比裁切。写入前自动备份，可一键还原。" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="3. 达芬奇 UI 字体" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold" />
+                        <TextBlock TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="定位 qwindows.dll 里的 Qt 字体回退表，把其中的字体族名等长改写为新的 ASCII 字体名（默认 Microsoft YaHei UI）。受槽位长度限制，字体名长度必须不超过可用字节数。" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="4. Adobe 字体（AE / PR / ME / AU 等）" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold" />
+                        <TextBlock TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="重建 Dictionaries\zh_CN 语言包里 FontStyle 字体键（字号 + 字体族名），并同步 META-INF\signatures.xml 的摘要（自动识别 SHA-1 / SHA-256 / SHA-512）。每次以首次备份为基线重建，不会反复叠加；CS6 到 2026 用同一套探测逻辑。" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    CornerRadius="8" Padding="18,16,18,16">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="数据存放位置" Style="{StaticResource BodyStrongTextBlockStyle}" />
+
+                    <StackPanel Spacing="3">
+                        <TextBlock Text="配置文件" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
+                        <TextBlock x:Name="TxtSettingsPath" TextWrapping="Wrap" IsTextSelectionEnabled="True"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="3">
+                        <TextBlock Text="备份目录" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
+                        <TextBlock x:Name="TxtBackupPath" TextWrapping="Wrap" IsTextSelectionEnabled="True"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="3">
+                        <TextBlock Text="日志目录" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
+                        <TextBlock x:Name="TxtLogPath" TextWrapping="Wrap" IsTextSelectionEnabled="True"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+
+                    <TextBlock TextWrapping="Wrap"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                               Text="单文件发布后程序所在目录可能被解压到临时位置，因此配置、备份与日志一律放在用户目录下，升级或移动 exe 不会丢失。" />
+
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Content="打开配置目录" Click="OnOpenRoaming" />
+                        <Button Content="打开备份目录" Click="OnOpenBackup" />
+                        <Button Content="打开日志目录" Click="OnOpenLogs" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    CornerRadius="8" Padding="18,16,18,16">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="使用流程与注意事项" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="· 达芬奇启动图：选择 Resolve.exe → 扫描资源 → 勾选目标项 → 选择新图片 → 应用。操作前请完全退出 DaVinci Resolve。" />
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="· 启动图：上方软件列表选一个 → 自动扫描 → 选中候选 → 选择新图片 → 应用替换。列表为空时点[浏览目录…]手动指定安装目录。操作前请完全退出目标程序；以管理员身份运行时拖放会被 UIPI 拦截，请改用[浏览 exe…]或[浏览目录…]（管理员模式下文件选择框会自动切换到 Win32 公共对话框）。" />
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource BodyTextBlockStyle}"
+                               Text="· 达芬奇 UI 字体：自动定位 qwindows.dll（也可手动指定）→ 在候选中选择字体 → 应用。首次应用会写入 .font.original.bak 备份，可随时还原。" />
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="· Adobe 字体：选择应用 → 设置字体与三档字号 → 应用。写入 Program Files 时会自动请求管理员权限；恢复依赖首次备份基线。" />
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                               Text="· 所有改动都会改动原始安装文件，建议在操作前自行留一份原始安装包或系统还原点。四个模块的备份互相独立，还原某一个模块不会影响其他模块。" />
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

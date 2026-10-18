@@ -1,0 +1,46 @@
+# ── 构建产物 / 依赖包 ──────────────────────────────────────────
+bin/
+obj/
+build/
+[Bb]uild/
+[Oo]ut/
+
+# 单文件启动器内嵌的 payload（由 build.ps1 生成，勿入库）
+**/payload.zip
+
+# ── 本地工具与 SDK ────────────────────────────────────────────
+.tools/
+.probe/
+.vs/
+.idea/
+*.user
+*.suo
+
+# ── 本项目自有的临时/取证目录 ──────────────────────────────────
+probe/
+snapshots/
+*.tmp
+
+# ── 生成出来的二进制资源 ──────────────────────────────────────
+# app.ico 由 tools/make-icon.py 一键生成，不纳入版本管理
+*.ico
+
+# ── 日志 / 备份 / 崩溃转储 ────────────────────────────────────
+*.log
+logs/
+*.bak
+*.original.bak
+*.dmp
+crash-report-*.json
+
+# ── 系统垃圾 ──────────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# ── NuGet ────────────────────────────────────────────────────
+*.nupkg
+packages/
+!repositories.config

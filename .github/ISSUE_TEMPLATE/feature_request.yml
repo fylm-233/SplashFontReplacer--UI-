@@ -1,0 +1,58 @@
+name: 功能建议 / Feature Request
+description: 提出新功能或改进建议
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        欢迎提建议。为了便于评估，请先说明「要解决什么问题」，再说明「希望怎么做」——
+        这两者都写清楚的功能请求通常更容易被采纳。
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 想解决什么问题
+      description: 当前什么场景下不好用、缺什么。
+      placeholder: 每次替换 JetBrains 的启动图都要手动指定 lib\app.jar，希望能列出多个 IDE 的 jar 条目并批量替换。
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 期望的实现方式
+      description: 你希望工具怎么做到，有参考实现更好。
+      placeholder: 扫描结果按 IDE 分组，勾选多个 jar 条目后一次写入，每个条目各自渲染到对应尺寸。
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: 涉及的模块
+      options:
+        - 启动图（Adobe 等）
+        - Adobe 字体
+        - 达芬奇启动图
+        - 达芬奇 UI 字体
+        - 新软件支持
+        - 程序启动 / 界面
+        - 构建 / 打包
+    validations:
+      required: true
+
+  - type: input
+    id: target
+    attributes:
+      label: 目标软件与版本（若与新软件支持有关）
+      placeholder: CLIP STUDIO PAINT 2.0
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 补充信息
+      description: 截图、样本文件说明、其他工具的可借鉴之处等。
+    validations:
+      required: false
